@@ -10,8 +10,6 @@
 
 @interface AsyncSocketHandler : NSObject
 
-@property (nonatomic, copy) void(^receiveInfoBlock)(NSString *message);
-
 + (instancetype)sharedInstance;
 
 /** 连接服务器 */
@@ -19,5 +17,9 @@
 
 /** 发送数据 */
 - (void)asyncSocket_sendMessage:(NSString *)message;
+
+/** 接收回调数据 */
+- (void)asyncSocket_receiveMessage:(void (^)(NSString *message))msg;
+
 
 @end

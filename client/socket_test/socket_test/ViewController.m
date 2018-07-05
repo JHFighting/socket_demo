@@ -50,15 +50,15 @@
 {
     if (Base_Socket) {
         [[AsyncSocketHandler sharedInstance] asyncSocket_connectToHost];
-        [AsyncSocketHandler sharedInstance].receiveInfoBlock = ^(NSString *message) {
+        [[AsyncSocketHandler sharedInstance] asyncSocket_receiveMessage:^(NSString *message) {
             [self readData:message];
-        };
+        }];
         
     } else {
         [[SocketHandler sharedInstance] socket_connectToHost];
-        [SocketHandler sharedInstance].receiveInfoBlock = ^(NSString *message) {
+        [[SocketHandler sharedInstance] socket_receiveMessage:^(NSString *message) {
             [self readData:message];
-        };
+        }];
     }
 }
 

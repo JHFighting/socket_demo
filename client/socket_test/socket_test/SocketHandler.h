@@ -15,8 +15,6 @@
     NSOutputStream *_outputStream;  //对应输出流
 }
 
-/** 接收数据回调 */
-@property (nonatomic, copy) void(^receiveInfoBlock)(NSString *message);
 
 + (instancetype)sharedInstance;
 
@@ -25,5 +23,8 @@
 
 /** 发送数据 */
 - (void)socket_sendMessage:(NSString *)message;
+
+/** 接收回调数据 */
+- (void)socket_receiveMessage:(void (^)(NSString *message))msg;
 
 @end

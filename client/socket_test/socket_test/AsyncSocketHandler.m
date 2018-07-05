@@ -11,6 +11,8 @@
 
 @interface AsyncSocketHandler() <GCDAsyncSocketDelegate>
 
+@property (nonatomic, copy) void(^receiveInfoBlock)(NSString *message);
+
 @property (nonatomic, strong) GCDAsyncSocket *asyncSocket;
 /** 是否连接成功 */
 @property (nonatomic, assign) BOOL connected;
@@ -49,6 +51,11 @@
     [self.asyncSocket writeData:data withTimeout:-1 tag:0];
 }
 
+- (void)asyncSocket_receiveMessage:(void (^)(NSString *message))msg
+{
+    _receiveInfoBlock = msg;
+}
+
 #pragma mark - GCDAsyncSocketDelegate
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
 {
@@ -62,7 +69,7 @@
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     NSString *text = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-    self.receiveInfoBlock(text);
+    _receiveInfoBlock(text);
     
     // 读取到服务端数据值后,能再次读取
     [self.asyncSocket readDataWithTimeout:-1 tag:0];

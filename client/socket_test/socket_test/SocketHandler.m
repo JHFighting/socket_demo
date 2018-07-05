@@ -10,6 +10,8 @@
 
 @interface SocketHandler() <NSStreamDelegate>
 
+@property (nonatomic, copy) void(^receiveInfoBlock)(NSString *message);
+
 @end
 
 @implementation SocketHandler
@@ -55,6 +57,11 @@
     [_outputStream write:data.bytes maxLength:data.length];
 }
 
+- (void)socket_receiveMessage:(void (^)(NSString *message))msg
+{
+    _receiveInfoBlock = msg;
+}
+
 - (NSString *)readData
 {
     uint8_t buf[1024];
@@ -74,7 +81,7 @@
         case NSStreamEventHasBytesAvailable: {
             NSLog(@"有字节可读");
             NSString *tempStr = [self readData];
-            self.receiveInfoBlock(tempStr);
+            _receiveInfoBlock(tempStr);
             break;
         }
         case NSStreamEventHasSpaceAvailable:
